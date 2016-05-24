@@ -1,6 +1,8 @@
 window.GAL = window.GAL || {};
 GAL.FinancialApp = GAL.FinancialApp || {};
 GAL.FinancialApp.Utils = GAL.FinancialApp.Utils || {};
+GAL.FinancialApp.Utils.currentURL = 'http://localhost:8099/';
+
 GAL.FinancialApp.Utils.padNumber = function (n, p) {
     var s = n.toString();
     while (s.length < p) {
