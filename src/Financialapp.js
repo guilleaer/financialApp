@@ -11,14 +11,10 @@ GAL.FinancialApp.Utils.padNumber = function (n, p) {
     return s;
   };
 GAL.FinancialApp.Utils.formatDateISO = function (d) {
+  var date;
   if (typeof (d) === "string") {
-    var date = new Date(d);
-    if (date.toISOString() === d) {
-      d = date;
-    } else {
-      OB.error("The argument must be a date or an iso string");
-      return;
-    }
+    date = new Date(d);
+    d = date;
   }
   var curr_date = d.getDate();
   var curr_month = d.getMonth();

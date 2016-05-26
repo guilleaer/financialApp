@@ -26,7 +26,7 @@ describe("FinancialApp", function() {
         date: new Date(),
         description: 'test description' + counter,
         amount: 150,
-        currency: '€'
+        currency: 'Eur'
       });
       counter += 1;
     });
@@ -36,7 +36,7 @@ describe("FinancialApp", function() {
       expect(newFinEntry.get('id') === counter-1).toBeTruthy();
       expect(newFinEntry.get('description') === 'test description' + (counter-1)).toBeTruthy();
       expect(newFinEntry.get('amount') === 150).toBeTruthy();
-      expect(newFinEntry.get('currency') === '€').toBeTruthy();
+      expect(newFinEntry.get('currency') === 'Eur').toBeTruthy();
     });
 
     it("Current financial entry data can be added to the list of financial entries", function() {
@@ -50,7 +50,7 @@ describe("FinancialApp", function() {
 
     beforeEach(function (done) {
       var newFinEntry = new financialEntryModel({
-        id: 'test'
+        id: 'test0'
       });
       newFinEntry.fetch({
         success: function(model, response, options) {
@@ -65,9 +65,9 @@ describe("FinancialApp", function() {
     });
 
     it("Get test entity from server", function() {
-      expect(returnedModel.get('id') === 'test').toBeTruthy();
-      expect(returnedModel.get('description') === 'Description_test').toBeTruthy();
-      expect(returnedModel.get('amount') === 999).toBeTruthy();
+      expect(returnedModel.get('id') === 'test0').toBeTruthy();
+      expect(returnedModel.get('description') === 'test description 0').toBeTruthy();
+      expect(returnedModel.get('amount') === 100).toBeTruthy();
       lstFinEntry.add(returnedModel);
       expect(lstFinEntry.length).toEqual(1);
     });
@@ -77,7 +77,7 @@ describe("FinancialApp", function() {
     var returnedCollection = null;
 
     beforeEach(function (done) {
-    lstFinEntry.fetch({
+      lstFinEntry.fetch({
         success: function(collection, response, options) {
           returnedCollection = collection;
           done();
@@ -91,7 +91,114 @@ describe("FinancialApp", function() {
 
     it("Get all entities from server", function() {
       expect(lstFinEntry.length).toEqual(2);
-
+      _.each(lstFinEntry.models, function (item, index) {
+        if (index) {
+          //1
+          expect(item.get('id') === 'test1').toBeTruthy();
+          expect(item.get('description') === 'test description 1').toBeTruthy();
+          expect(item.get('amount') === 200).toBeTruthy();
+        } else {
+          //0
+          expect(item.get('id') === 'test0').toBeTruthy();
+          expect(item.get('description') === 'test description 0').toBeTruthy();
+          expect(item.get('amount') === 100).toBeTruthy();
+        }
+      });
     });
+  });
+
+  describe("Communicate with server - POST/PUT/DELETE", function() {
+    var createdCollection = null;
+    var updatedCollection = null;
+    var deletedCollection = null;
+    var postDone = false;
+    var putDone = false;
+
+    beforeEach(function (done) {
+      var newFinEntry;
+      newFinEntry = new financialEntryModel({
+        description: 'test description',
+        amount: 150,
+        date: new Date(),
+        currency: 'EUR'
+      });
+
+      if (postDone && putDone === false) {
+        createdCollection.at(2).set('description', 'CHANGED ' + createdCollection.at(2).get('description'));
+        createdCollection.at(2).set('amount', 999);
+        createdCollection.at(2).save(null, {
+          success: function(model, response, options) {
+             lstFinEntry.fetch({
+              success: function(collection, response, options) {
+                updatedCollection = collection;
+                done();
+              },
+              error: function () {
+                updatedCollection = null;
+                done();
+              }
+            });
+          },
+          error: function () {
+            done();
+          }
+        });
+      } else if (postDone && putDone) {
+        updatedCollection.at(2).destroy({
+          success: function(model, response, options) {
+            lstFinEntry.fetch({
+              success: function(collection, response, options) {
+                deletedCollection = collection;
+                done();
+              },
+              error: function () {
+                deletedCollection = null;
+                done();
+              }
+            });
+          }, 
+          error: function () {
+
+          }
+        });
+      } else {
+        newFinEntry.save(null, {
+          success: function(model, response, options) {
+             lstFinEntry.fetch({
+              success: function(collection, response, options) {
+                createdCollection = collection;
+                done();
+              },
+              error: function () {
+                createdCollection = null;
+                done();
+              }
+            });
+          },
+          error: function () {
+            done();
+          }
+        });
+      }
+    });
+
+    it("POST new entity to server", function() {
+      expect(lstFinEntry.length).toEqual(3);
+      expect(createdCollection.at(2).get('description') === 'test description').toBeTruthy();
+      expect(createdCollection.at(2).get('amount') === 150).toBeTruthy();
+      postDone = true;
+    });
+
+    it("PUT entity to server", function() {
+      expect(lstFinEntry.length).toEqual(3);
+      expect(createdCollection.at(2).get('description') === 'CHANGED test description').toBeTruthy();
+      expect(createdCollection.at(2).get('amount') === 999).toBeTruthy();
+      putDone = true;
+    });
+
+    it("DELETE new entity from server", function() {
+      expect(lstFinEntry.length).toEqual(2);
+    });
+
   });
 });
