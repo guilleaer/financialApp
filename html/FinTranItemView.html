@@ -1,2 +1,6 @@
-<span class="badge"><%= amount %></span>
-<%= description %>
+<button type="button" class="line-button btn btn-default btn-xs">
+  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Remove
+</button>
+<span class="badge"><%= amount %> <%= currency %></span>
+<a class="showdetails" href="#fincEntryDetails/<%= id %>"><%= description %></a>
+

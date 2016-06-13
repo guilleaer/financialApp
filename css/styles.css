@@ -1,3 +1,7 @@
+.line-button {
+	margin-left: 15px;
+	float: right;
+}
 .dropdown-menu {
     max-height: 400px;
     overflow-y: scroll;

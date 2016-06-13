@@ -1,7 +1,8 @@
 window.Router = Backbone.Router.extend({
 
     routes: {
-        "": "home"
+        "": "home",
+        "fincEntryDetails/:id": 'fincEntryDetails'
         /*"contact": "contact",
         "employees/:id": "employeeDetails"*/
     },
@@ -33,6 +34,17 @@ window.Router = Backbone.Router.extend({
         }
       });
       this.headerView.select('home-menu');
+    },
+
+    fincEntryDetails: function (id) {
+        var fincTran = new GAL.FinancialApp.Model.FinancialEntry({id: id});
+        fincTran.fetch({
+            success: function (data) {
+                // Note that we could also 'recycle' the same instance of EmployeeFullView
+                // instead of creating new instances
+                $('#content').html(new FinTranDetails({model: data}).render().el);
+            }
+        });
     }
 
     // contact: function () {
@@ -58,7 +70,7 @@ window.Router = Backbone.Router.extend({
 });
 
 //templateLoader.load(["HomeView", "ContactView", "HeaderView", "EmployeeView", "EmployeeSummaryView", "EmployeeListItemView"],
-templateLoader.load(["FinTranItemView", "HeaderView"],
+templateLoader.load(["FinTranItemView", "FinTranDetails", "HeaderView"],
     function () {
         app = new Router();
         Backbone.history.start();

@@ -5,6 +5,7 @@ window.FincTranListView = Backbone.View.extend({
 
     initialize:function () {
         var self = this;
+        this.model.bind("remove", this.render, this);
         this.model.bind("reset", this.render, this);
         this.model.bind("add", function (financialEntry) {
             $(self.el).append(new FinTranItemView({model:financialEntry}).render().el);
@@ -24,10 +25,23 @@ window.FinTranItemView = Backbone.View.extend({
 
     tagName:"li",
     className: 'list-group-item',
+    events: {
+        'click .line-button': 'remove_click'
+    },
 
     initialize:function () {
         this.model.bind("change", this.render, this);
         this.model.bind("destroy", this.close, this);
+    },
+
+    remove_click: function (e) {
+      this.model.destroy({
+        success: function(model, response, options) {
+          debugger;
+        },
+        error: function () {
+        }
+      });
     },
 
     render:function () {
