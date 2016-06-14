@@ -1,0 +1,40 @@
+<!-- Modal -->
+<div id="modalAdd" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add finc Entry</h4>
+      </div>
+      <div class="modal-body">
+        <div class="list-group">
+          <div class="list-group-item">
+            <div class="input-group">
+              <span class="input-group-addon" id="desc-addon1">Description</span>
+              <input type="text" model-property="description" class="form-control" aria-describedby="desc-addon1" value="">
+            </div>
+            <div class="input-group">
+              <span class="input-group-addon" id="date-addon1">Date</span>
+              <input type="text" model-property="date" class="form-control datepicker" aria-describedby="date-addon1" value="">
+            </div>
+            <div class="input-group">
+              <span class="input-group-addon" id="amount-addon1">Amount</span>
+              <input type="text" model-property="amount" class="form-control" aria-describedby="amount-addon1" value="">
+            </div>
+            <div class="input-group">
+              <span class="input-group-addon" id="currency-addon1">Currency</span>
+              <input type="text" model-property="currency" maxlength="3" class="form-control" aria-describedby="currency-addon1" value="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btncreate btn btn-default" data-dismiss="modal">Create</button>
+      </div>
+    </div>
+
+  </div>
+</div>

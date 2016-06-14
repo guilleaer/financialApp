@@ -37,7 +37,6 @@ window.FinTranItemView = Backbone.View.extend({
     remove_click: function (e) {
       this.model.destroy({
         success: function(model, response, options) {
-          debugger;
         },
         error: function () {
         }

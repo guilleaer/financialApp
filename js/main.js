@@ -3,19 +3,18 @@ window.Router = Backbone.Router.extend({
     routes: {
         "": "home",
         "fincEntryDetails/:id": 'fincEntryDetails'
-        /*"contact": "contact",
-        "employees/:id": "employeeDetails"*/
     },
-
     initialize: function () {
+        this.model = this.model || new GAL.FinancialApp.Collection.FinancialEntryCollection();
+        this.modalAddView = new ModalAddView({collection: this.model});
         this.headerView = new HeaderView();
         $('.header').html(this.headerView.render().el);
+        $('.modals').html(this.modalAddView.render().el);
     },
 
     home: function () {
       // Since the home view never changes, we instantiate it and render it only once
       var me = this;
-      this.model = this.model || new GAL.FinancialApp.Collection.FinancialEntryCollection();
       //TODO: loading
       this.model.fetch({
         success: function (collection, response, options) {
@@ -40,37 +39,13 @@ window.Router = Backbone.Router.extend({
         var fincTran = new GAL.FinancialApp.Model.FinancialEntry({id: id});
         fincTran.fetch({
             success: function (data) {
-                // Note that we could also 'recycle' the same instance of EmployeeFullView
-                // instead of creating new instances
-                $('#content').html(new FinTranDetails({model: data}).render().el);
+              $('#content').html(new FinTranDetails({model: data}).render().el);
             }
         });
     }
-
-    // contact: function () {
-    //     if (!this.contactView) {
-    //         this.contactView = new ContactView();
-    //         this.contactView.render();
-    //     }
-    //     $('#content').html(this.contactView.el);
-    //     this.headerView.select('contact-menu');
-    // },
-
-    // employeeDetails: function (id) {
-    //     var employee = new Employee({id: id});
-    //     employee.fetch({
-    //         success: function (data) {
-    //             // Note that we could also 'recycle' the same instance of EmployeeFullView
-    //             // instead of creating new instances
-    //             $('#content').html(new EmployeeView({model: data}).render().el);
-    //         }
-    //     });
-    // }
-
 });
 
-//templateLoader.load(["HomeView", "ContactView", "HeaderView", "EmployeeView", "EmployeeSummaryView", "EmployeeListItemView"],
-templateLoader.load(["FinTranItemView", "FinTranDetails", "HeaderView"],
+templateLoader.load(["FinTranItemView", "FinTranDetails", "HeaderView", "ModalAddView"],
     function () {
         app = new Router();
         Backbone.history.start();
